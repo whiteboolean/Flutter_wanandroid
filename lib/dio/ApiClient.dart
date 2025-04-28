@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../model/BaseResponse.dart';
+import '../base/BaseResponse.dart';
 import 'ApiUrl.dart';
 
 class ApiClient {

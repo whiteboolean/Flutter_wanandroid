@@ -29,6 +29,12 @@ class MainListPage extends StatelessWidget {
 
   //获取 首页文章 ArticleController 实例
   Widget listView() {
+    // 计算总 item 数量
+    // 1 (Banner) + listItems.length (文章) + (isLoadingMore.value ? 1 : 0) (加载更多指示器)
+    int totalItems = 1 + mainPageController.listItems.length;
+    if (mainPageController.isLoadingMore.value) {
+      totalItems += 1; // 如果正在加载更多，增加一个 item 的位置
+    }
     return ListView.builder(
       shrinkWrap: true,
       // 假设顶部插图是单独的，如果插图是列表的一部分，itemCount 要加1
@@ -37,15 +43,24 @@ class MainListPage extends StatelessWidget {
       controller: mainPageController.scrollController,
       itemBuilder: (context, index) {
         if (index == 0) {
+          // 索引 0 总是 Banner
           return buildBannerView();
-        } else if (index == mainPageController.listItems.length + 1 - 1) {
-          // final article = articles[index]; // 获取当前的文章数据
-          return buildLoadingMore(); // 使用自定义的列表项 Widget
-        } else {
+        } else if (index < 1 + mainPageController.listItems.length) {
+          // 索引从 1 到 listItems.length 是文章项
+          // 对应的 listItems 索引是 index - 1
+          final articleIndex = index - 1;
+          // 理论上 itemCount 计算正确时，这里不会越界，但加上断言或检查也无妨
+          // assert(articleIndex >= 0 && articleIndex < mainPageController.listItems.length);
+
+          final article = mainPageController.listItems[articleIndex];
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ArticleListItem(),
-          ); // 使用自定义的列表项 Widget
+            padding: const EdgeInsets.symmetric(horizontal: 10), // 例如，给每个文章项左右 padding
+            child: ArticleListItem(articleItem: article), // 传递文章数据
+          );
+        } else {
+          // 剩余的索引（只有一个，即 totalItems - 1）是加载更多指示器
+          // 只有当 totalItems 包含了加载更多项时才会走到这里
+          return buildLoadingMore();
         }
       },
     );

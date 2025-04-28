@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:untitled6/model/ArticleResponse.dart';
 
 class ArticleListItem extends StatelessWidget {
 
+  final ArticleItem articleItem;
 
-  const ArticleListItem({Key? key}) : super(key: key);
+  const ArticleListItem({Key? key, required this.articleItem}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class ArticleListItem extends StatelessWidget {
         print('点击了文章: ');
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0), // 内边距
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0), // 内边距
         // 可以添加一个底部分割线
         decoration: BoxDecoration(
           border: Border(
@@ -36,11 +37,11 @@ class ArticleListItem extends StatelessWidget {
                   child: Row(
                     children: [
                       // 如果有标签（如“新”）则显示
-
-                      Padding(
+                      if (articleItem.tags?.length!=0)
+                        Padding(
                           padding: const EdgeInsets.only(right: 4.0), // 标签和作者之间留点空隙
                           child: Text(
-                            "article.tag!",
+                            '${articleItem.tags?[0].name}',
                             style: TextStyle(
                               fontSize: 12.0,
                               color: Colors.blue[700], // 标签颜色
@@ -48,8 +49,9 @@ class ArticleListItem extends StatelessWidget {
                             ),
                           ),
                         ),
+
                       Text(
-                        "article.author",
+                        articleItem.author??articleItem.shareUser!,
                         style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -64,7 +66,7 @@ class ArticleListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "article.time",
+                     articleItem.niceDate??"",
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Colors.grey[600],
@@ -96,7 +98,7 @@ class ArticleListItem extends StatelessWidget {
             ),
             const SizedBox(height: 4.0), // 作者行和标题之间留点空隙
             Text(
-              "article.title",
+              articleItem.title??"",
               style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.normal,
@@ -107,7 +109,7 @@ class ArticleListItem extends StatelessWidget {
             ),
             const SizedBox(height: 4.0), // 标题和副标题之间留点空隙
             Text(
-              "article.secondaryInfo",
+              '$articleItem.superChapterName · $articleItem.chapterName'  ,
               style: TextStyle(
                 fontSize: 12.0,
                 color: Colors.grey[600],

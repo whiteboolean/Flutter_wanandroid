@@ -6,23 +6,26 @@ import 'package:untitled6/dio/ApiUrl.dart';
 import 'package:untitled6/dio/DioService.dart';
 import 'package:untitled6/model/BannerResponse.dart';
 
+import '../base/BaseResponse.dart';
+import '../model/ArticleResponse.dart';
+
 class MainPageController extends getx.GetxController {
   var bannerImages = <BannerEntity>[].obs; // 使用 .obs 将数据声明为响应式
   var isLoading = true.obs;
   var currentBannerIndex = 0.obs;
 
-  var listItems = <String>[].obs;
+  var listItems = <ArticleItem>[].obs;
   var isLoadingMore = false.obs;
   var isRefreshing = false.obs;
   var page = 1;
-  var currentListPageIndex = 1 ;
+  var currentListPageIndex = 1;
 
   final scrollController = ScrollController();
 
   @override
   void onInit() {
     super.onInit();
-    fetchBannerData(); // 初始化时加载数据
+    fetchBannerData();
     loadInitialList();
     scrollController.addListener(_scrollListener);
   }
@@ -30,14 +33,13 @@ class MainPageController extends getx.GetxController {
   void loadInitialList() {
     listItems.clear();
     page = 1;
-    listItems.addAll(List.generate(20, (index) => 'Item ${index + 1}'));
+    fetchArticleList();
   }
 
   Future<void> refreshList() async {
     if (isRefreshing.value) return;
     isRefreshing.value = true;
 
-    await Future.delayed(Duration(seconds: 2)); // 模拟请求
     loadInitialList();
 
     isRefreshing.value = false;
@@ -45,18 +47,7 @@ class MainPageController extends getx.GetxController {
 
   void loadMoreData() async {
     if (isLoadingMore.value || isRefreshing.value) return;
-    isLoadingMore.value = true;
-
-    await Future.delayed(Duration(seconds: 2)); // 模拟请求
-
-    if (page < 3) {
-      page++;
-      listItems.addAll(
-        List.generate(20, (index) => 'Item ${listItems.length + index + 1}'),
-      );
-    }
-
-    isLoadingMore.value = false;
+    fetchArticleList();
   }
 
   void _scrollListener() {
@@ -91,17 +82,17 @@ class MainPageController extends getx.GetxController {
     }
   }
 
-  //调用接口获取文章列表
-  Future<void> fetchArticleList() async {
-    // var dio = DioService.instance;
-
-    var params  = "$currentBannerIndex?cid=0&page_size=40";
-
-    var data = ApiClient.instance.get(ApiUrl.articleList+params, parseData: parseData)
-
-    // https://www.wanandroid.com/article/list/1/json?cid=0&page_size=40
-
-
-
+  // 假设这是你调用 API 获取数据的方法
+  Future<BaseResponse<ArticleListResponse>> fetchArticleList() async {
+    var apiClient = ApiClient.instance;
+    var params = "${ApiUrl.articleList}$currentBannerIndex/json?cid=0&page_size=40";
+    return await apiClient.get(
+      params,
+      parseData: (json) {
+        var articleListResponse = ArticleListResponse.fromJson(json);
+        listItems.value = articleListResponse.datas??[];
+        return ArticleListResponse.fromJson(json);
+      },
+    );
   }
 }
