@@ -109,7 +109,7 @@ class ArticleListItem extends StatelessWidget {
             ),
             const SizedBox(height: 4.0), // 标题和副标题之间留点空隙
             Text(
-              '$articleItem.superChapterName · $articleItem.chapterName'  ,
+              '${articleItem.superChapterName} · ${articleItem.chapterName}'  ,
               style: TextStyle(
                 fontSize: 12.0,
                 color: Colors.grey[600],
