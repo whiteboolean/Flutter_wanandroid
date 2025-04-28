@@ -1,6 +1,9 @@
-# untitled6
+# 玩安卓Flutter客户端
 
 A new Flutter project.
+
+流畅，简洁的玩安卓，客户端
+采用GetX+Dio开发，深度还原UI
 
 ## Getting Started
 
