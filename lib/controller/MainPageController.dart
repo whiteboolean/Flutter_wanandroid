@@ -86,16 +86,19 @@ class MainPageController extends getx.GetxController {
   // 假设这是你调用 API 获取数据的方法
   Future<BaseResponse<ArticleListResponse>> fetchArticleList(bool isLoadMore) async {
     var apiClient = ApiClient.instance;
-    var params = "${ApiUrl.articleList}$currentListPageIndex/json?cid=0&page_size=40";
+    var params = "${ApiUrl.articleList}$currentListPageIndex/json?cid=0";
     return await apiClient.get(
       params,
       parseData: (json) {
         if (!isLoadMore) {
           listItems.clear();
         }
+        isLoadingMore.value = false;
+        isRefreshing.value = false;
         var articleListResponse = ArticleListResponse.fromJson(json);
         if(articleListResponse.datas!=null){
-          listItems.value = articleListResponse.datas??[];
+          listItems.addAll(articleListResponse.datas??[]) ;
+          print("返回数据的条数:${articleListResponse.datas?.length}");
         }
         return ArticleListResponse.fromJson(json);
       },
