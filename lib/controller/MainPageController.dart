@@ -46,6 +46,7 @@ class MainPageController extends getx.GetxController {
 
   void loadMoreData() async {
     if (isLoadingMore.value || isRefreshing.value) return;
+    isLoadingMore.value = true;
     currentListPageIndex++;
     fetchArticleList(true);
   }

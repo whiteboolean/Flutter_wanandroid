@@ -42,6 +42,7 @@ class MainListPage extends StatelessWidget {
       // 轮播 + 列表 + loading
       controller: mainPageController.scrollController,
       itemBuilder: (context, index) {
+        print("当前列表的索引值index:$index");
         if (index == 0) {
           // 索引 0 总是 Banner
           return buildBannerView();
@@ -53,10 +54,8 @@ class MainListPage extends StatelessWidget {
           // assert(articleIndex >= 0 && articleIndex < mainPageController.listItems.length);
 
           final article = mainPageController.listItems[articleIndex];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10), // 例如，给每个文章项左右 padding
-            child: ArticleListItem(articleItem: article), // 传递文章数据
-          );
+          return ArticleListItem(articleItem: article); // 传递文章数据
+
         } else {
           // 剩余的索引（只有一个，即 totalItems - 1）是加载更多指示器
           // 只有当 totalItems 包含了加载更多项时才会走到这里
