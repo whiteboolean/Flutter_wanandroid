@@ -31,9 +31,8 @@ class MainPageController extends getx.GetxController {
   }
 
   void loadInitialList() {
-    listItems.clear();
-    page = 1;
-    fetchArticleList();
+    currentListPageIndex = 1;
+    fetchArticleList(false);
   }
 
   Future<void> refreshList() async {
@@ -47,7 +46,8 @@ class MainPageController extends getx.GetxController {
 
   void loadMoreData() async {
     if (isLoadingMore.value || isRefreshing.value) return;
-    fetchArticleList();
+    currentListPageIndex++;
+    fetchArticleList(true);
   }
 
   void _scrollListener() {
@@ -83,14 +83,19 @@ class MainPageController extends getx.GetxController {
   }
 
   // 假设这是你调用 API 获取数据的方法
-  Future<BaseResponse<ArticleListResponse>> fetchArticleList() async {
+  Future<BaseResponse<ArticleListResponse>> fetchArticleList(bool isLoadMore) async {
     var apiClient = ApiClient.instance;
-    var params = "${ApiUrl.articleList}$currentBannerIndex/json?cid=0&page_size=40";
+    var params = "${ApiUrl.articleList}$currentListPageIndex/json?cid=0&page_size=40";
     return await apiClient.get(
       params,
       parseData: (json) {
+        if (!isLoadMore) {
+          listItems.clear();
+        }
         var articleListResponse = ArticleListResponse.fromJson(json);
-        listItems.value = articleListResponse.datas??[];
+        if(articleListResponse.datas!=null){
+          listItems.value = articleListResponse.datas??[];
+        }
         return ArticleListResponse.fromJson(json);
       },
     );
