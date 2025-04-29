@@ -22,6 +22,9 @@ class MainPageController extends getx.GetxController {
 
   final scrollController = ScrollController();
 
+  // 定义一个最小刷新显示时间（例如 800 毫秒）
+  final Duration _minimumRefreshDuration = Duration(milliseconds: 800);
+
   @override
   void onInit() {
     super.onInit();
@@ -37,11 +40,34 @@ class MainPageController extends getx.GetxController {
 
   Future<void> refreshList() async {
     if (isRefreshing.value) return;
-    isRefreshing.value = true;
 
-    loadInitialList();
+    isRefreshing.value = true; // 可以用来表示后台正在刷新，但不直接控制 RefreshIndicator
+    currentListPageIndex = 1;
+    // 注意：不要在这里 clear listItems，否则在延迟期间列表会变空
 
-    isRefreshing.value = false;
+    // 1. 创建数据获取的 Future (但不立即 await)
+    //    将实际的数据获取和处理逻辑封装到一个单独的 async 函数中
+    Future<void> dataFetchFuture = fetchArticleList(false);
+
+    // 2. 创建一个延时 Future
+    Future<void> delayFuture = Future.delayed(_minimumRefreshDuration);
+
+    try {
+      // 3. 使用 Future.wait 等待数据获取和最小延时都完成
+      //    RefreshIndicator 会等待这个 Future.wait 完成后才停止动画
+      await Future.wait([dataFetchFuture, delayFuture]);
+
+    } catch (e) {
+      // 如果 _fetchAndProcessFirstPage 抛出错误，这里会捕获
+      print("Error refreshing data: $e");
+      getx.Get.snackbar('错误', '刷新数据失败');
+      // 即使出错，动画也会在最小延迟后或错误发生后（取决于哪个更晚）结束
+    } finally {
+      // 4. 无论成功或失败，最终将 isLoading 状态设回 false
+      //    （注意：这个 isLoading 主要用于你自己的逻辑，
+      //     RefreshIndicator 的显示/隐藏由 onRefresh 返回的 Future 控制）
+      isLoading.value = false;
+    }
   }
 
   void loadMoreData() async {
