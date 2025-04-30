@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:untitled6/model/ArticleResponse.dart';
+
+import '../main.dart';
 
 class ArticleListItem extends StatelessWidget {
   final ArticleItem articleItem;
@@ -13,7 +17,26 @@ class ArticleListItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         // 处理列表项点击事件，跳转到文章详情页等
-        print('点击了文章: ');
+        // 确保 articleItem.link 是有效的 URL 字符串
+        if (articleItem.link != null && articleItem.link!.isNotEmpty) {
+          Get.toNamed(
+            // 使用 Get.toNamed 进行导航
+            AppRoutes.webView, // 使用在 AppRoutes 中定义的路由名称
+            arguments: {
+              // 使用 arguments 参数传递 Map 数据
+              'url': articleItem.link!,
+              'title': articleItem.title ?? '详情', // 传递 URL 和标题 (提供默认标题)
+            },
+          );
+        } else {
+          // 如果链接无效，使用 GetX 的 SnackBar
+          Get.snackbar(
+            '错误', // 标题
+            '无效的文章链接', // 消息
+            snackPosition: SnackPosition.BOTTOM, // SnackBar 位置 (可选)
+          );
+          print('无效的链接: ${articleItem.link}');
+        }
       },
       child: Container(
         // 可以添加一个底部分割线
