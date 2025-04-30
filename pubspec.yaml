@@ -40,6 +40,7 @@ dependencies:
   carousel_slider: ^5.0.0
   json_annotation: ^4.5.0
   smooth_page_indicator: ^1.0.0+2 # 最新版的 smooth_page_indicator
+  webview_flutter: ^4.7.0
 
 
 dev_dependencies:
