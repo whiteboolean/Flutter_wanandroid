@@ -18,7 +18,7 @@ class MainPageController extends getx.GetxController {
   var isLoadingMore = false.obs;
   var isRefreshing = false.obs;
   var page = 1;
-  var currentListPageIndex = 1;
+  var currentListPageIndex = 0;
   final scrollController = ScrollController();
 
   // 定义一个最小刷新显示时间（例如 800 毫秒）
