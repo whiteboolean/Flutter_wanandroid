@@ -117,7 +117,7 @@ class ArticleListItem extends StatelessWidget {
                       //   padding: EdgeInsets.zero, // 移除默认 padding
                       //   constraints: BoxConstraints(), // 移除默认约束
                       //   onPressed: () {
-                      //      // 处理点赞点击事件
+                      //      处理点赞点击事件
                       //      print('点击了点赞');
                       //   },
                       // ),
