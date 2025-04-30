@@ -22,7 +22,7 @@ class MainPageController extends getx.GetxController {
   final scrollController = ScrollController();
 
   // 定义一个最小刷新显示时间（例如 800 毫秒）
-  final Duration _minimumRefreshDuration = Duration(milliseconds: 800);
+  final Duration _minimumRefreshDuration = Duration(milliseconds: 500);
 
   @override
   void onInit() {
