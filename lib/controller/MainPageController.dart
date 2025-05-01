@@ -10,7 +10,8 @@ import '../base/BaseResponse.dart';
 import '../model/ArticleResponse.dart';
 
 class MainPageController extends getx.GetxController {
-  var bannerImages = <BannerEntity>[].obs; // 使用 .obs 将数据声明为响应式
+  // 使用 .obs 将数据声明为响应式
+  var bannerImages = <BannerEntity>[].obs;
   var isLoading = true.obs;
   var currentBannerIndex = 0.obs;
 
@@ -33,7 +34,6 @@ class MainPageController extends getx.GetxController {
   }
 
   void loadInitialList() {
-    currentListPageIndex = 1;
     fetchArticleList(false);
   }
 
@@ -41,7 +41,7 @@ class MainPageController extends getx.GetxController {
     if (isRefreshing.value) return;
 
     isRefreshing.value = true; // 可以用来表示后台正在刷新，但不直接控制 RefreshIndicator
-    currentListPageIndex = 1;
+    currentListPageIndex = 0;
     // 注意：不要在这里 clear listItems，否则在延迟期间列表会变空
 
     // 1. 创建数据获取的 Future (但不立即 await)
