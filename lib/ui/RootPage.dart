@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:untitled6/MainListPage.dart';
 import 'package:untitled6/controller/MainTabController.dart';
 
+import 'MinePage.dart';
 import 'PlaceholderPage.dart';
 class RootPage extends StatelessWidget {
   RootPage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class RootPage extends StatelessWidget {
     MainListPage(title:'首页'),
     const PlaceholderPage(title: '问答'),
     const PlaceholderPage(title: '体系'),
-    const PlaceholderPage(title: '我的'),
+    const MinePage(title: '我的'),
   ];
 
   @override

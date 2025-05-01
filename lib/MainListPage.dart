@@ -68,8 +68,7 @@ class MainListPage extends StatelessWidget {
     );
   }
 
-  Widget buildBannerView() {
-    return Center(
+  Widget buildBannerView() => Center(
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -145,10 +144,8 @@ class MainListPage extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget buildLoadingMore() {
-    return Obx(
+  Widget buildLoadingMore() => Obx(
       () =>
           mainTabController.isLoadingMore.value
               ? Center(
@@ -159,5 +156,4 @@ class MainListPage extends StatelessWidget {
               )
               : SizedBox.shrink(),
     );
-  }
 }
