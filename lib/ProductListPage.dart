@@ -30,7 +30,7 @@ class  ProductListPage extends StatelessWidget {
         //   },
         // );
 
-        return MainListPage();
+        return MainListPage(title: "首页");
 
         // return ListView(
         //   shrinkWrap: true, //

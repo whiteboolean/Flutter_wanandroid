@@ -9,7 +9,7 @@ import 'package:untitled6/model/BannerResponse.dart';
 import '../base/BaseResponse.dart';
 import '../model/ArticleResponse.dart';
 
-class MainPageController extends getx.GetxController {
+class MainTabController extends getx.GetxController {
   // 使用 .obs 将数据声明为响应式
   var bannerImages = <BannerEntity>[].obs;
   var isLoading = true.obs;
@@ -24,6 +24,10 @@ class MainPageController extends getx.GetxController {
 
   // 定义一个最小刷新显示时间（例如 800 毫秒）
   final Duration _minimumRefreshDuration = Duration(milliseconds: 500);
+  // 使用 .obs 创建响应式变量来存储当前选中的 Tab 索引，默认为 0 (第一个 Tab)
+  var currentPageIndex = 0.obs;
+
+
 
   @override
   void onInit() {
@@ -31,6 +35,11 @@ class MainPageController extends getx.GetxController {
     fetchBannerData();
     loadInitialList();
     scrollController.addListener(_scrollListener);
+  }
+
+  // 提供一个方法来改变当前的 Tab 索引
+  void changeTabIndex(int index) {
+    currentPageIndex.value = index;
   }
 
   void loadInitialList() {
