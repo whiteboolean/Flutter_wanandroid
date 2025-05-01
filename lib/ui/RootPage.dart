@@ -14,10 +14,10 @@ class RootPage extends StatelessWidget {
 
   // 定义你的四个 Tab 页面列表
   final List<Widget> tabPages = [
-    MainListPage(title:'首页'),
-    const PlaceholderPage(title: '问答'),
-    const PlaceholderPage(title: '体系'),
-    const MinePage(title: '我的'),
+    MainListPage(title:'MainPage'),
+    const PlaceholderPage(title: 'Answer'),
+    const PlaceholderPage(title: 'Framework'),
+    const MinePage(title: 'Mine'),
   ];
 
   @override
@@ -43,22 +43,22 @@ class RootPage extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.home_outlined),
                 activeIcon: Icon(Icons.home), // 选中时的图标 (可选)
-                label: '首页',
+                label: 'MainPage',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.question_answer_outlined),
                 activeIcon: Icon(Icons.question_answer),
-                label: '问答',
+                label: 'Q&A',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.account_tree_outlined),
                 activeIcon: Icon(Icons.account_tree),
-                label: '体系',
+                label: 'Frameworks',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline),
                 activeIcon: Icon(Icons.person),
-                label: '我的',
+                label: 'Mine',
               ),
             ],
             // 可以设置选中和未选中的颜色 (可选)

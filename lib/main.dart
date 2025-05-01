@@ -5,14 +5,15 @@ import 'package:untitled6/binding/RootBinding.dart';
 import 'package:untitled6/page1.dart';
 
 import 'package:get/get.dart';
+import 'package:untitled6/ui/LoginAndRegisterPage.dart';
 import 'package:untitled6/ui/PlaceholderPage.dart';
 import 'package:untitled6/ui/RootPage.dart';
 import 'package:untitled6/ui/WebViewPage.dart';
 
-
 class AppRoutes {
   static const String root = '/'; // 可以将 RootPage 设为根路由
-  static const String webView = '/webView'; // 定义路由名称
+  static const String webView = '/webView'; // WebView页面
+  static const String loginAndRegister = '/loginAndRegister'; // 登录注册页面
 
   static final List<GetPage> routes = [
     GetPage(name: root, page: () => RootPage(), binding: RootBinding()),
@@ -24,6 +25,8 @@ class AppRoutes {
       // transition: Transition.rightToLeft, // 可以定义转场动画 (可选)
       // binding: WebViewBinding(), // 如果有专门的 Controller 和 Binding (可选)
     ),
+    GetPage(name: loginAndRegister, page: () =>
+        LoginAndRegisterPage()),
     // ... 其他路由
   ];
 }
@@ -86,4 +89,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

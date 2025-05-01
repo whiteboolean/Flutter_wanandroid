@@ -35,7 +35,8 @@ class MinePage extends StatelessWidget {
             width: double.infinity,
             child: GestureDetector(
               onTap: () {
-                Get.snackbar('提示', '跳转到登录/注册页面！');
+                // Get.snackbar('提示', '跳转到登录/注册页面！');
+                Get.toNamed(AppRoutes.loginAndRegister);
               },
               child: Column(
                 children: [
@@ -56,7 +57,7 @@ class MinePage extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Text("去登录")
+                  Text("Login First!!!")
                       .fontSize(16)
                       .textColor(Colors.white)
                       .paddingTop(10)
