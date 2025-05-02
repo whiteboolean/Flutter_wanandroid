@@ -5,34 +5,32 @@ import 'package:untitled6/controller/LoginRegisterController.dart';
 
 class RegisterForm extends StatelessWidget {
   final LoginRegisterController controller;
-  final Key formKey;
 
   RegisterForm({Key? key, required this.controller})
-    : formKey = UniqueKey(),
-      super(key: key);
+    :super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LoginRegisterController>(
       builder: (controller) {
         return Form(
-          key: formKey,
+          key: controller.registerFormKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.arrow_circle_left), Text("去登录")],
+                children: [Icon(Icons.arrow_circle_left), Text("Login now")],
               ).onTap(() {
                 controller.goToPage(0);
               }),
               // Email 输入框
               TextFormField(
-                controller: controller.emailController,
+                controller: controller.registerEmailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
-                  labelText: '邮箱',
-                  hintText: '请输入你的邮箱',
+                  labelText: 'email',
+                  hintText: 'input your email',
                   prefixIcon: Icon(Icons.email, color: Colors.grey),
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -42,22 +40,21 @@ class RegisterForm extends StatelessWidget {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '请输入你的邮箱';
+                    return 'email cannot be empty';
                   }
                   if (!value.contains('@')) {
-                    return '请输入有效的邮箱';
+                    return 'please input valid email';
                   }
                   return null;
                 },
-              ).paddingHorizontal(40).paddingTop(10),
-              const SizedBox(height: 16),
+              ).paddingHorizontal(40).paddingTop(10).paddingBottom(16),
               // 密码输入框
               TextFormField(
-                controller: controller.passwordController,
+                controller: controller.registerPasswordController,
                 obscureText: controller.obscureText,
                 decoration: InputDecoration(
-                  labelText: '密码',
-                  hintText: '请输入你的密码',
+                  labelText: 'password',
+                  hintText: 'please input your password',
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -67,11 +64,11 @@ class RegisterForm extends StatelessWidget {
                     children: [
                       Obx(
                         () => Visibility(
-                          visible: controller.showPasswordClearButton.value,
+                          visible: controller.showRegisterPasswordClearButton.value,
                           child: IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: () {
-                              controller.clearPassword();
+                              controller.clearRegisterPassword();
                             },
                           ),
                         ),
@@ -91,10 +88,10 @@ class RegisterForm extends StatelessWidget {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '请输入你的密码';
+                    return 'Please input your password';
                   }
                   if (value.length < 6) {
-                    return '密码长度至少为 6 位';
+                    return 'Password must be at least six characters.';
                   }
                   return null;
                 },
@@ -103,11 +100,11 @@ class RegisterForm extends StatelessWidget {
 
               // Confirm 密码输入框
               TextFormField(
-                controller: controller.confirmPasswordController,
+                controller: controller.registerConfirmPasswordController,
                 obscureText: controller.obscureConfirmText,
                 decoration: InputDecoration(
-                  labelText: '确认密码',
-                  hintText: '请再次输入你的密码',
+                  labelText: 'recheck password',
+                  hintText: 'Please input your password again',
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
@@ -118,11 +115,11 @@ class RegisterForm extends StatelessWidget {
                       Obx(
                         () => Visibility(
                           visible:
-                              controller.showConfirmPasswordClearButton.value,
+                              controller.showRegisterConfirmPasswordClearButton.value,
                           child: IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: () {
-                              controller.clearConfirmPassword();
+                              controller.clearRegisterConfirmPassword();
                             },
                           ),
                         ),
@@ -142,10 +139,10 @@ class RegisterForm extends StatelessWidget {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '请确认你的密码';
+                    return 'Please check your password';
                   }
-                  if (value != controller.passwordController.text) {
-                    return '两次输入的密码不一致';
+                  if (value != controller.registerPasswordController.text) {
+                    return "The two passwords do not match";
                   }
                   return null;
                 },
@@ -161,7 +158,7 @@ class RegisterForm extends StatelessWidget {
                     backgroundColor: Color(0xFF5380ed),
                   ),
                   child: const Text(
-                    '注册', // 中文按钮文字
+                    'Register',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),

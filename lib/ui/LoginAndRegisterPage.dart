@@ -19,7 +19,11 @@ class LoginAndRegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login / Register'),
+        title: const Text(''),
+        leading: Icon(Icons.close_rounded,color: Colors.white,).onTap(() {
+          Navigator.of(context).pop();
+        }),
+        backgroundColor: Color(0xFF5380ed),
       ),
       body: ListView(
         children: [
@@ -34,7 +38,8 @@ class LoginAndRegisterPage extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(30),
                     child: Image.asset(
-                      "assets/images/dudu3.webp", // Replace with your image asset path
+                      "assets/images/dudu3.webp",
+                      // Replace with your image asset path
                       width: 100,
                       fit: BoxFit.cover,
                     ),
@@ -45,17 +50,14 @@ class LoginAndRegisterPage extends StatelessWidget {
                       .paddingTop(20)
                       .paddingBottom(15),
                   Text(
-                    "This App Is Developed By WhiteBoolean !",
-                  )
-                      .textColor(Colors.white)
-                      .fontSize(18)
-                      .paddingBottom(20),
+                    "This App Is Developed By GungDing·Snoop !",
+                  ).textColor(Colors.white).fontSize(18).paddingBottom(20),
                 ],
               ),
             ),
           ),
           SizedBox(
-            height: 380,
+            height: 420,
             child: PageView(
               controller: controller.pageController,
               onPageChanged: (index) => controller.currentPage.value = index,
@@ -64,7 +66,7 @@ class LoginAndRegisterPage extends StatelessWidget {
                 RegisterForm(controller: controller),
               ],
             ),
-          )
+          ).paddingTop(30),
         ],
       ),
     );

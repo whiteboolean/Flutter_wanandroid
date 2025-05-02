@@ -2,71 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginRegisterController extends GetxController {
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController(); // Add this
+  // Separate form keys for login and register
+  final loginFormKey = GlobalKey<FormState>();
+  final registerFormKey = GlobalKey<FormState>();
+
+  // Separate controllers for login and register
+  final loginEmailController = TextEditingController(); // login email
+  final loginPasswordController = TextEditingController(); // login password
+
+  final registerEmailController = TextEditingController(); // register email
+  final registerPasswordController = TextEditingController(); // register password
+  final registerConfirmPasswordController = TextEditingController(); // register confirm password
+
   bool obscureText = true;
-  bool obscureConfirmText = true; // add this
-  final PageController pageController = PageController(); // PageView controller
-  var isLogin = true.obs; // Add this
+  bool obscureConfirmText = true;
+  final PageController pageController = PageController();
+  var isLogin = true.obs;
 
   var currentPage = 0.obs;
 
+
+  // Add Listeners to the TextEditingControllers
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
-    passwordController.addListener(_updatePasswordVisibility);
-    confirmPasswordController.addListener(_updateConfirmPasswordVisibility);
-    (_updateConfirmPasswordVisibility);
+    loginPasswordController.addListener(_updateLoginPasswordVisibility);
+    registerPasswordController.addListener(_updateRegisterPasswordVisibility);
+    registerConfirmPasswordController.addListener(_updateRegisterConfirmPasswordVisibility);
   }
 
-  void goToPage(int index) {
-    pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.ease,
-    );
-    currentPage.value = index;
+  // Add dispose to remove listeners
+  @override
+  void onClose() {
+    loginEmailController.dispose();
+    loginPasswordController.removeListener(_updateLoginPasswordVisibility);
+    loginPasswordController.dispose();
+    registerEmailController.dispose();
+    registerPasswordController.removeListener(_updateRegisterPasswordVisibility);
+    registerPasswordController.dispose();
+    registerConfirmPasswordController
+        .removeListener(_updateRegisterConfirmPasswordVisibility);
+    registerConfirmPasswordController.dispose();
+    pageController.dispose();
+    super.onClose();
   }
 
   // Observables for clear button visibility
-  RxBool showPasswordClearButton = false.obs;
-  RxBool showConfirmPasswordClearButton = false.obs;
+  RxBool showLoginPasswordClearButton = false.obs;
+  RxBool showRegisterPasswordClearButton = false.obs;
+  RxBool showRegisterConfirmPasswordClearButton = false.obs;
 
   // Listeners to update the observables
-  void _updatePasswordVisibility() {
-    showPasswordClearButton.value = passwordController.text.isNotEmpty;
+  void _updateLoginPasswordVisibility() {
+    showLoginPasswordClearButton.value = loginPasswordController.text.isNotEmpty;
   }
 
-  void _updateConfirmPasswordVisibility() {
-    showConfirmPasswordClearButton.value = confirmPasswordController.text.isNotEmpty;
+  void _updateRegisterPasswordVisibility() {
+    showRegisterPasswordClearButton.value = registerPasswordController.text.isNotEmpty;
   }
 
-  void clearPassword() {
-    passwordController.clear();
+  void _updateRegisterConfirmPasswordVisibility() {
+    showRegisterConfirmPasswordClearButton.value =
+        registerConfirmPasswordController.text.isNotEmpty;
   }
 
-  void clearConfirmPassword() {
-    confirmPasswordController.clear();
+  void clearLoginPassword() {
+    loginPasswordController.clear();
   }
 
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    pageController.dispose(); // Dispose the page controller
+  void clearRegisterPassword() {
+    registerPasswordController.clear();
+  }
 
-    passwordController.removeListener(_updatePasswordVisibility); // Remove listener
-    confirmPasswordController.removeListener(_updateConfirmPasswordVisibility);//remove listener
-    super.onClose();
+  void clearRegisterConfirmPassword() {
+    registerConfirmPasswordController.clear();
   }
 
   void toggleObscureText() {
     obscureText = !obscureText;
-    update(); // Refresh the UI
+    update();
   }
 
   void toggleObscureConfirmText() {
@@ -75,10 +89,9 @@ class LoginRegisterController extends GetxController {
   }
 
   void onLoginPressed(BuildContext context) {
-    if (formKey.currentState!.validate()) {
-      // Form is valid, perform login
-      String email = emailController.text;
-      String password = passwordController.text;
+    if (loginFormKey.currentState?.validate() ?? false) {
+      String email = loginEmailController.text;
+      String password = loginPasswordController.text;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Login Email: $email, Password: $password'),
@@ -88,11 +101,10 @@ class LoginRegisterController extends GetxController {
   }
 
   void onRegisterPressed(BuildContext context) {
-    if (formKey.currentState!.validate()) {
-      // Form is valid, perform register
-      String email = emailController.text;
-      String password = passwordController.text;
-      String confirmPassword = confirmPasswordController.text;
+    if (registerFormKey.currentState?.validate() ?? false) {
+      String email = registerEmailController.text;
+      String password = registerPasswordController.text;
+      String confirmPassword = registerConfirmPasswordController.text;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -104,5 +116,13 @@ class LoginRegisterController extends GetxController {
 
   void changePage() {
     isLogin.value = !isLogin.value;
+  }
+
+  void goToPage(int page) {
+    pageController.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 }

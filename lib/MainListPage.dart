@@ -46,7 +46,7 @@ class MainListPage extends StatelessWidget {
       // 轮播 + 列表 + loading
       controller: mainTabController.scrollController,
       itemBuilder: (context, index) {
-        print("当前列表的索引值index:$index");
+        // print("当前列表的索引值index:$index");
         if (index == 0) {
           // 索引 0 总是 Banner
           return buildBannerView();
