@@ -6,8 +6,7 @@ class CurvePainter extends CustomPainter {
     Paint paint =
         Paint()
           ..color =
-              Colors
-                  .blue // 曲线的颜色
+              Color(0xFF5380ed) // 曲线的颜色
           ..style = PaintingStyle.fill;
 
     Path path = Path();
@@ -15,7 +14,7 @@ class CurvePainter extends CustomPainter {
     path.lineTo(0, size.height * 1.2); // 开始曲线的点
     path.quadraticBezierTo(
       size.width / 2,
-      size.height * 0.85,
+      size.height * 0.75,
       size.width,
       size.height*1.2,
     ); // 贝塞尔曲线控制点

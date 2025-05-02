@@ -27,7 +27,7 @@ class MinePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title).textColor(Colors.white),
-        backgroundColor: Colors.blue,
+        backgroundColor:   Color(0xFF5380ed) ,
       ),
       body: Column(
         children: [
@@ -57,7 +57,7 @@ class MinePage extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Text("Login First!!!")
+                  Text("Login First ~~~")
                       .fontSize(16)
                       .textColor(Colors.white)
                       .paddingTop(10)
@@ -65,7 +65,7 @@ class MinePage extends StatelessWidget {
                 ],
               ),
             ),
-          ).backgroundColor(Colors.blue).paddingBottom(10),
+          ).backgroundColor(  Color(0xFF5380ed) ).paddingBottom(10),
 
           /// ... (Spread Operator):
           /// 这是 Dart 中的展开运算符。它用于将一个列表中的元素展开，
