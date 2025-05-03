@@ -51,13 +51,19 @@ class RegisterForm extends StatelessWidget {
               // 密码输入框
               TextFormField(
                 controller: controller.registerPasswordController,
-                obscureText: controller.obscureText.value,
+                obscureText: controller.registerObscureText.value,
                 decoration: InputDecoration(
                   labelText: 'password',
                   hintText: 'please input your password',
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  enabledBorder: UnderlineInputBorder( // the normal state color
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder( // the focused state color
+                    borderSide: BorderSide(color: Color(0xFF5380ed), width: 2.0), // Customize the color and width here
                   ),
                   suffixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -79,7 +85,7 @@ class RegisterForm extends StatelessWidget {
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
-                        onPressed: controller.toggleObscureText,
+                        onPressed: controller.toggleRegisterObscureText,
                       ),
                     ],
                   ),
@@ -101,13 +107,19 @@ class RegisterForm extends StatelessWidget {
               // Confirm 密码输入框
               TextFormField(
                 controller: controller.registerConfirmPasswordController,
-                obscureText: controller.obscureConfirmText.value,
+                obscureText: controller.registerObscureText.value,
                 decoration: InputDecoration(
                   labelText: 'recheck password',
                   hintText: 'Please input your password again',
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  enabledBorder: UnderlineInputBorder( // the normal state color
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder( // the focused state color
+                    borderSide: BorderSide(color: Color(0xFF5380ed), width: 2.0), // Customize the color and width here
                   ),
                   suffixIcon: Row(
                     mainAxisSize: MainAxisSize.min,

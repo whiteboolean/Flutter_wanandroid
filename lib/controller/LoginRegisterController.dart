@@ -24,6 +24,7 @@ class LoginRegisterController extends GetxController {
 
   var obscureText = true.obs; // 改为 obs 以便 UI 响应
   var obscureConfirmText = true.obs; // 改为 obs
+  var registerObscureText = true.obs; // 改为 obs
   final PageController pageController = PageController();
   var isLogin = true.obs;
 
@@ -99,10 +100,18 @@ class LoginRegisterController extends GetxController {
 
   void toggleObscureText() {
     obscureText.value = !obscureText.value; // 使用 .value
+    print("obscureText: ${obscureText.value}");
+    update();
+  }
+
+  void toggleRegisterObscureText() {
+    registerObscureText.value = !registerObscureText.value; // 使用 .value
+    update();
   }
 
   void toggleObscureConfirmText() {
     obscureConfirmText.value = !obscureConfirmText.value; // 使用 .value
+    update();
   }
 
   void onLoginPressed() async {

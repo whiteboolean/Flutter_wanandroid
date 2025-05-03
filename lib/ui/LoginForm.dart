@@ -31,12 +31,14 @@ class LoginForm extends StatelessWidget {
                 decoration: const InputDecoration(
                   labelText: 'email',
                   // 中文标签
-                  hintText: 'Please input your email',
+                  hintText: 'input email',
                   // 中文提示文字
                   prefixIcon: Icon(Icons.email, color: Colors.grey),
-                  // 蓝色图标
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
+                  enabledBorder: UnderlineInputBorder( // the normal state color
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder( // the focused state color
+                    borderSide: BorderSide(color: Color(0xFF5380ed), width: 2.0), // Customize the color and width here
                   ),
                   // 移除外边框，保留底部线条
                   labelStyle: TextStyle(color: Colors.black),
@@ -61,10 +63,16 @@ class LoginForm extends StatelessWidget {
                     obscureText: controller.obscureText.value,
                     decoration: InputDecoration(
                       labelText: 'password',
-                      hintText: 'please input your password',
+                      hintText: 'input password',
                       prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                       border: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      enabledBorder: UnderlineInputBorder( // the normal state color
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder( // the focused state color
+                        borderSide: BorderSide(color: Color(0xFF5380ed), width: 2.0), // Customize the color and width here
                       ),
                       // 移除外边框，保留底部线条
                       suffixIcon: IconButton(

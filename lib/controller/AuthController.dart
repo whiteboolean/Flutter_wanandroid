@@ -1,4 +1,5 @@
 // controllers/auth_controller.dart
+import 'dart:async';
 import 'dart:convert'; // 用于 JSON 编解码
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,58 +36,64 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // 在 onInit 中启动异步初始化，但不阻塞
     _initFuture = _initialize();
   }
 
   // 异步初始化方法
   Future<void> _initialize() async {
-    // 如果已经在初始化，直接返回 Future
-    if (_initFuture != null) return _initFuture;
+    // 防止重复执行
+    if (_initFuture != null && isInitialized.value) return; // 如果已初始化则直接返回
 
-    print("AuthController: Initializing SharedPreferences...");
-    try {
-      _prefs = await SharedPreferences.getInstance(); // 获取 SP 实例
-      print("AuthController: SharedPreferences instance obtained.");
-      checkLoginStatus(); // 检查登录状态
-    } catch (e) {
-      print(
-        "AuthController: Error initializing SharedPreferences or checking status: $e",
-      );
-      // 初始化失败，可以设置默认状态
-      isLoggedIn.value = false;
-      currentUser.value = null;
-    } finally {
-      isInitialized.value = true; // 标记初始化完成
-      print(
-        "AuthController: Initialization complete. LoggedIn: ${isLoggedIn.value}",
-      );
+    // 确保只执行一次初始化逻辑
+    if (_initFuture == null) {
+      Completer<void> completer = Completer(); // 使用 Completer 控制 Future
+      _initFuture = completer.future; // 将 Completer 的 Future 赋给 _initFuture
+
+      print("AuthController: Initializing...");
+      try {
+        _prefs = await SharedPreferences.getInstance();
+        print("AuthController: SharedPreferences instance obtained.");
+        checkLoginStatus(); // 检查并设置 isLoggedIn 和 currentUser
+        print("AuthController: Login status checked. LoggedIn: ${isLoggedIn.value}");
+        isInitialized.value = true; // *** 在 checkLoginStatus 后设置 ***
+        print("AuthController: Initialization complete.");
+        completer.complete(); // 标记 Future 完成
+      } catch (e) {
+        print("AuthController: Error initializing: $e");
+        isLoggedIn.value = false;
+        currentUser.value = null;
+        isInitialized.value = true; // *** 即使出错也要标记完成 ***
+        completer.completeError(e); // 标记 Future 出错 (可选)
+      }
     }
+    return _initFuture!; // 返回存储的 Future
   }
 
-  // 提供一个 Future 让外部可以等待初始化完成
+  // waitUntilInitialized 现在等待 _initFuture 即可
   Future<void> waitUntilInitialized() async {
-    // 如果 _initFuture 为 null (onInit 可能还没执行完)，稍等一下
+    // 如果 onInit 还未执行或 _initFuture 未赋值，等待
     while (_initFuture == null) {
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 10));
     }
-    await _initFuture;
+    // 等待初始化 Future 完成
+    // try-catch 可以避免初始化出错时这里抛异常
+    try {
+      await _initFuture!;
+    } catch (e) {
+      print("AuthController: waitUntilInitialized caught initialization error: $e");
+      // 即使初始化出错，也认为“等待”结束了
+    }
   }
 
-  // 检查本地存储的登录状态
+  // checkLoginStatus 保持不变
   void checkLoginStatus() {
-    // 确保 _prefs 已经初始化
-    if (!isInitialized.value) {
-      print("AuthController: checkLoginStatus called before initialization.");
-      // 理论上 _initialize 会调用它，但作为防御
-      return;
-    }
+    // 注意：这里不再需要检查 isInitialized，因为 _initialize 会保证调用它时 _prefs 已就绪
     final loggedIn = _prefs.getBool(_isLoggedInKey) ?? false;
     isLoggedIn.value = loggedIn;
     if (loggedIn) {
       currentUser.value = _getUserDataFromPrefs();
     } else {
-      currentUser.value = null; // 确保未登录时 currentUser 为 null
+      currentUser.value = null;
     }
   }
 
@@ -185,10 +192,6 @@ class AuthController extends GetxController {
   }
 
   LoginResponse? _getUserDataFromPrefs() {
-    if (!isInitialized.value) {
-      print("Attempted to get user data before prefs initialized.");
-      return null; // SP 未初始化时返回 null
-    }
     final String? userJson = _prefs.getString(_userDataKey);
     if (userJson != null && userJson.isNotEmpty) {
       try {

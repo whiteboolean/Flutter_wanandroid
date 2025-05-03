@@ -58,10 +58,10 @@ void main() async {
 
   // 4. 根据登录状态决定初始路由
   final String initialRoute =
-      authController.isLoggedIn.value
-          ? AppRoutes
-              .root // 已登录，去主页
-          : AppRoutes.loginAndRegister; // 未登录，去登录页
+      // authController.isLoggedIn.value
+      //     ? AppRoutes
+      //         .root // 已登录，去主页
+      AppRoutes.root;
   print("Main: Initial route determined: $initialRoute");
 
   // 5. 运行 App，传入计算好的 initialRoute
