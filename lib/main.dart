@@ -1,6 +1,8 @@
 import 'package:ducafe_ui_core/ducafe_ui_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled6/MainListPage.dart';
+import 'package:untitled6/binding/LoginRegisterBinding.dart';
 import 'package:untitled6/binding/RootBinding.dart';
 import 'package:untitled6/page1.dart';
 
@@ -9,6 +11,9 @@ import 'package:untitled6/ui/LoginAndRegisterPage.dart';
 import 'package:untitled6/ui/PlaceholderPage.dart';
 import 'package:untitled6/ui/RootPage.dart';
 import 'package:untitled6/ui/WebViewPage.dart';
+
+import 'binding/InitalBinding.dart';
+import 'controller/AuthController.dart';
 
 class AppRoutes {
   static const String root = '/'; // 可以将 RootPage 设为根路由
@@ -25,18 +30,48 @@ class AppRoutes {
       // transition: Transition.rightToLeft, // 可以定义转场动画 (可选)
       // binding: WebViewBinding(), // 如果有专门的 Controller 和 Binding (可选)
     ),
-    GetPage(name: loginAndRegister, page: () =>
-        LoginAndRegisterPage()),
+    GetPage(
+      name: loginAndRegister,
+      page: () => LoginAndRegisterPage(),
+      binding: LoginRegisterBinding(),
+    ),
     // ... 其他路由
   ];
 }
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // *** 核心逻辑：在 runApp 之前确定初始路由 ***
+
+  // 1. 手动执行初始化绑定 (确保 ApiClient 和 AuthController 被 put)
+  //    注意：这里假设 InitialBinding 的 dependencies 是 async
+  await InitialBinding().dependencies();
+  print("Main: Initial Binding complete.");
+
+  // 2. 获取已初始化的 AuthController 实例
+  final AuthController authController = Get.find<AuthController>();
+
+  // 3. 等待 AuthController 内部的 SharedPreferences 初始化完成
+  await authController.waitUntilInitialized(); // 使用我们添加的等待方法
+  print("Main: AuthController initialization confirmed.");
+
+  // 4. 根据登录状态决定初始路由
+  final String initialRoute =
+      authController.isLoggedIn.value
+          ? AppRoutes
+              .root // 已登录，去主页
+          : AppRoutes.loginAndRegister; // 未登录，去登录页
+  print("Main: Initial route determined: $initialRoute");
+
+  // 5. 运行 App，传入计算好的 initialRoute
+  runApp(MyApp(initialRoute: initialRoute));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialRoute; // 接收动态确定的初始路由
+
+  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -73,8 +108,10 @@ class MyApp extends StatelessWidget {
           // 默认跟随系统设置
 
           // 初始路由名称，应用启动时首先加载这个路由对应的页面
-          initialRoute: AppRoutes.root,
+          initialRoute: initialRoute,
           // 设置初始路由为我们在 AppRoutes 中定义的根路由 ('/')
+
+          // initialBinding: InitialBinding(),
 
           // GetX 的路由配置列表
           getPages: AppRoutes.routes, // 使用从 app_routes.dart 导入的路由列表

@@ -35,10 +35,6 @@ class MainListPage extends StatelessWidget {
   Widget listView() {
     // 计算总 item 数量
     // 1 (Banner) + listItems.length (文章) + (isLoadingMore.value ? 1 : 0) (加载更多指示器)
-    int totalItems = 1 + mainTabController.listItems.length;
-    if (mainTabController.isLoadingMore.value) {
-      totalItems += 1; // 如果正在加载更多，增加一个 item 的位置
-    }
     return ListView.builder(
       shrinkWrap: true,
       // 假设顶部插图是单独的，如果插图是列表的一部分，itemCount 要加1

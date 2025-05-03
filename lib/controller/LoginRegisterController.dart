@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:untitled6/dio/ApiUrl.dart';
+
+import '../base/BaseResponse.dart';
+import '../dio/ApiClient.dart';
+import '../model/LoginResponse.dart';
+import 'AuthController.dart';
 
 class LoginRegisterController extends GetxController {
   // Separate form keys for login and register
@@ -11,16 +17,22 @@ class LoginRegisterController extends GetxController {
   final loginPasswordController = TextEditingController(); // login password
 
   final registerEmailController = TextEditingController(); // register email
-  final registerPasswordController = TextEditingController(); // register password
-  final registerConfirmPasswordController = TextEditingController(); // register confirm password
+  final registerPasswordController =
+      TextEditingController(); // register password
+  final registerConfirmPasswordController =
+      TextEditingController(); // register confirm password
 
-  bool obscureText = true;
-  bool obscureConfirmText = true;
+  var obscureText = true.obs; // 改为 obs 以便 UI 响应
+  var obscureConfirmText = true.obs; // 改为 obs
   final PageController pageController = PageController();
   var isLogin = true.obs;
 
   var currentPage = 0.obs;
 
+  // 获取 ApiClient 和 AuthController 实例
+  final ApiClient apiClient = Get.find<ApiClient>();
+  final AuthController authController =
+      Get.find<AuthController>(); // *** 获取 AuthController ***
 
   // Add Listeners to the TextEditingControllers
   @override
@@ -28,7 +40,9 @@ class LoginRegisterController extends GetxController {
     super.onInit();
     loginPasswordController.addListener(_updateLoginPasswordVisibility);
     registerPasswordController.addListener(_updateRegisterPasswordVisibility);
-    registerConfirmPasswordController.addListener(_updateRegisterConfirmPasswordVisibility);
+    registerConfirmPasswordController.addListener(
+      _updateRegisterConfirmPasswordVisibility,
+    );
   }
 
   // Add dispose to remove listeners
@@ -38,10 +52,13 @@ class LoginRegisterController extends GetxController {
     loginPasswordController.removeListener(_updateLoginPasswordVisibility);
     loginPasswordController.dispose();
     registerEmailController.dispose();
-    registerPasswordController.removeListener(_updateRegisterPasswordVisibility);
+    registerPasswordController.removeListener(
+      _updateRegisterPasswordVisibility,
+    );
     registerPasswordController.dispose();
-    registerConfirmPasswordController
-        .removeListener(_updateRegisterConfirmPasswordVisibility);
+    registerConfirmPasswordController.removeListener(
+      _updateRegisterConfirmPasswordVisibility,
+    );
     registerConfirmPasswordController.dispose();
     pageController.dispose();
     super.onClose();
@@ -54,11 +71,13 @@ class LoginRegisterController extends GetxController {
 
   // Listeners to update the observables
   void _updateLoginPasswordVisibility() {
-    showLoginPasswordClearButton.value = loginPasswordController.text.isNotEmpty;
+    showLoginPasswordClearButton.value =
+        loginPasswordController.text.isNotEmpty;
   }
 
   void _updateRegisterPasswordVisibility() {
-    showRegisterPasswordClearButton.value = registerPasswordController.text.isNotEmpty;
+    showRegisterPasswordClearButton.value =
+        registerPasswordController.text.isNotEmpty;
   }
 
   void _updateRegisterConfirmPasswordVisibility() {
@@ -79,38 +98,103 @@ class LoginRegisterController extends GetxController {
   }
 
   void toggleObscureText() {
-    obscureText = !obscureText;
-    update();
+    obscureText.value = !obscureText.value; // 使用 .value
   }
 
   void toggleObscureConfirmText() {
-    obscureConfirmText = !obscureConfirmText;
-    update();
+    obscureConfirmText.value = !obscureConfirmText.value; // 使用 .value
   }
 
-  void onLoginPressed(BuildContext context) {
+  void onLoginPressed() async {
     if (loginFormKey.currentState?.validate() ?? false) {
       String email = loginEmailController.text;
       String password = loginPasswordController.text;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Login Email: $email, Password: $password'),
-        ),
-      );
+
+      Get.dialog(Center(child: CircularProgressIndicator()));
+
+      await requestLoginApi(email, password);
+
+      // 可以在这里关闭加载指示器 (如果登录成功，AuthController 会导航走)
+      if (Get.isDialogOpen ?? false) Get.back();
     }
   }
 
-  void onRegisterPressed(BuildContext context) {
-    if (registerFormKey.currentState?.validate() ?? false) {
-      String email = registerEmailController.text;
-      String password = registerPasswordController.text;
-      String confirmPassword = registerConfirmPasswordController.text;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'Register Email: $email, Password: $password,Confirm Password:$confirmPassword'),
-        ),
+  Future<BaseResponse<dynamic>> requestSignUpApi(
+    String email,
+    String password,
+    String repassword,
+  ) async {
+    Map<String, dynamic>? params = {
+      "username": email,
+      "password": password,
+      "repassword": repassword,
+      "verifyCode": "2020",
+    };
+    // 使用 void 作为 T
+    BaseResponse<dynamic> response = await apiClient.post<dynamic>(
+      ApiUrl.register,
+      data: params, // 假设 API 路径
+      parseData: (_) => null, // 提供一个总是返回 null 的解析函数
+    );
+    if (response.isSuccess) {
+      Get.snackbar("注册成功", "请使用您的账号密码登录");
+      // 注册成功后可以清空注册表单，并切换回登录页面
+      registerEmailController.clear();
+      registerPasswordController.clear();
+      registerConfirmPasswordController.clear();
+      isLogin.value = true; // 切换回登录 Tab
+      goToPage(0); // 切换 PageView 到登录页
+    } else {
+      Get.snackbar("注册失败", response.errorMsg);
+    }
+    return response;
+  }
+
+
+  Future<void> requestLoginApi(String email, String password) async {
+    try {
+      BaseResponse<LoginResponse?> response = await apiClient.postForm(
+        ApiUrl.login,
+        formData: {'username': email, 'password': password},
+        parseData: (json) {
+          if (json != null && json is Map<String, dynamic>) {
+            try {
+              return LoginResponse.fromJson(json);
+            } catch (e) {
+              return null;
+            }
+          }
+          return null;
+        },
       );
+      if (response.isSuccess && response.data != null) {
+        // *** 登录成功，调用 AuthController 处理后续 ***
+        await authController.handleLoginSuccess(response.data);
+        // 不需要在这里 Get.snackbar 或导航了，AuthController 会处理
+      } else {
+        // API 返回错误，显示提示
+        Get.snackbar("登录失败", response.errorMsg);
+      }
+    } catch (e) {
+      // 网络或其他异常
+      Get.snackbar("登录出错", "请检查网络或稍后重试");
+      print("Login request error: $e");
+    }
+  }
+
+  void onRegisterPressed(BuildContext context) async{
+    if (registerFormKey.currentState?.validate() ?? false) {
+      String email = registerEmailController.text.trim();
+      String password = registerPasswordController.text.trim();
+      String confirmPassword = registerConfirmPasswordController.text.trim();
+      // 可以显示加载指示器
+      Get.dialog(Center(child: CircularProgressIndicator()));
+
+      // 调用封装的 requestSignUpApi
+      await requestSignUpApi(email, password, confirmPassword);
+
+      // 关闭加载指示器
+      if (Get.isDialogOpen ?? false) Get.back();
     }
   }
 

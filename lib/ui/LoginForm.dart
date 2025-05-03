@@ -58,7 +58,7 @@ class LoginForm extends StatelessWidget {
                 builder: (controller) {
                   return TextFormField(
                     controller: controller.loginPasswordController,
-                    obscureText: controller.obscureText,
+                    obscureText: controller.obscureText.value,
                     decoration: InputDecoration(
                       labelText: 'password',
                       hintText: 'please input your password',
@@ -69,7 +69,7 @@ class LoginForm extends StatelessWidget {
                       // 移除外边框，保留底部线条
                       suffixIcon: IconButton(
                         icon: Icon(
-                          controller.obscureText
+                          controller.obscureText.value
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
@@ -94,7 +94,7 @@ class LoginForm extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => controller.onLoginPressed(context),
+                  onPressed: () => controller.onLoginPressed(),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Color(0xFF5380ed),

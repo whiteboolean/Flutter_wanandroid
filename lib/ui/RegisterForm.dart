@@ -51,7 +51,7 @@ class RegisterForm extends StatelessWidget {
               // 密码输入框
               TextFormField(
                 controller: controller.registerPasswordController,
-                obscureText: controller.obscureText,
+                obscureText: controller.obscureText.value,
                 decoration: InputDecoration(
                   labelText: 'password',
                   hintText: 'please input your password',
@@ -75,7 +75,7 @@ class RegisterForm extends StatelessWidget {
                       ),
                       IconButton(
                         icon: Icon(
-                          controller.obscureText
+                          controller.obscureText.value
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
@@ -101,7 +101,7 @@ class RegisterForm extends StatelessWidget {
               // Confirm 密码输入框
               TextFormField(
                 controller: controller.registerConfirmPasswordController,
-                obscureText: controller.obscureConfirmText,
+                obscureText: controller.obscureConfirmText.value,
                 decoration: InputDecoration(
                   labelText: 'recheck password',
                   hintText: 'Please input your password again',
@@ -126,7 +126,7 @@ class RegisterForm extends StatelessWidget {
                       ),
                       IconButton(
                         icon: Icon(
-                          controller.obscureConfirmText
+                          controller.obscureConfirmText.value
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),

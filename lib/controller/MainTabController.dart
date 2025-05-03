@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart' as getx;
+import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:untitled6/dio/ApiClient.dart';
 import 'package:untitled6/dio/ApiUrl.dart';
@@ -9,7 +9,7 @@ import 'package:untitled6/model/BannerResponse.dart';
 import '../base/BaseResponse.dart';
 import '../model/ArticleResponse.dart';
 
-class MainTabController extends getx.GetxController {
+class MainTabController extends GetxController {
   // 使用 .obs 将数据声明为响应式
   var bannerImages = <BannerEntity>[].obs;
   var isLoading = true.obs;
@@ -24,10 +24,10 @@ class MainTabController extends getx.GetxController {
 
   // 定义一个最小刷新显示时间（例如 800 毫秒）
   final Duration _minimumRefreshDuration = Duration(milliseconds: 500);
+
   // 使用 .obs 创建响应式变量来存储当前选中的 Tab 索引，默认为 0 (第一个 Tab)
   var currentPageIndex = 0.obs;
-
-
+  var apiClient = Get.find<ApiClient>();
 
   @override
   void onInit() {
@@ -64,15 +64,13 @@ class MainTabController extends getx.GetxController {
       // 3. 使用 Future.wait 等待数据获取和最小延时都完成
       //    RefreshIndicator 会等待这个 Future.wait 完成后才停止动画
       await Future.wait([dataFetchFuture, delayFuture]);
-
     } catch (e) {
       // 如果 _fetchAndProcessFirstPage 抛出错误，这里会捕获
       print("Error refreshing data: $e");
-      getx.Get.snackbar('错误', '刷新数据失败');
+      Get.snackbar('错误', '刷新数据失败');
       // 即使出错，动画也会在最小延迟后或错误发生后（取决于哪个更晚）结束
     } finally {
       // 4. 无论成功或失败，最终将 isLoading 状态设回 false
-      //    （注意：这个 isLoading 主要用于你自己的逻辑，
       //     RefreshIndicator 的显示/隐藏由 onRefresh 返回的 Future 控制）
       isLoading.value = false;
     }
@@ -117,9 +115,9 @@ class MainTabController extends getx.GetxController {
     }
   }
 
-  // 假设这是你调用 API 获取数据的方法
-  Future<BaseResponse<ArticleListResponse>> fetchArticleList(bool isLoadMore) async {
-    var apiClient = ApiClient.instance;
+  Future<BaseResponse<ArticleListResponse?>> fetchArticleList(
+    bool isLoadMore,
+  ) async {
     var params = "${ApiUrl.articleList}$currentListPageIndex/json?cid=0";
     return await apiClient.get(
       params,
@@ -130,8 +128,8 @@ class MainTabController extends getx.GetxController {
         isLoadingMore.value = false;
         isRefreshing.value = false;
         var articleListResponse = ArticleListResponse.fromJson(json);
-        if(articleListResponse.datas!=null){
-          listItems.addAll(articleListResponse.datas??[]) ;
+        if (articleListResponse.datas != null) {
+          listItems.addAll(articleListResponse.datas ?? []);
           print("返回数据的条数:${articleListResponse.datas?.length}");
         }
         return ArticleListResponse.fromJson(json);

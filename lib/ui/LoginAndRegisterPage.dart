@@ -13,7 +13,7 @@ import 'RegisterForm.dart';
 class LoginAndRegisterPage extends StatelessWidget {
   LoginAndRegisterPage({super.key});
 
-  final controller = Get.put(LoginRegisterController());
+    final controller = Get.find<LoginRegisterController>();
 
   @override
   Widget build(BuildContext context) {

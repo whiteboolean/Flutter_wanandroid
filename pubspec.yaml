@@ -41,6 +41,13 @@ dependencies:
   json_annotation: ^4.5.0
   smooth_page_indicator: ^1.0.0+2 # 最新版的 smooth_page_indicator
   webview_flutter: ^4.7.0
+  shared_preferences: ^2.2.3 # Shared Preferences
+  dio_cookie_manager: ^3.1.1 # Dio Cookie 管理器
+  cookie_jar: ^4.0.8 # CookieJar 基础库
+  path_provider: ^2.1.3 # 添加 path_provider
+#  shared_preferences_cookie_store: ^2.0.1 # 使用 SP 持久化 Cookie (可选但推荐)
+  # json_annotation: ^4.9.0 # 如果使用 json_serializable
+  # ... 其他依赖
 
 
 dev_dependencies:
