@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:path_provider/path_provider.dart';
 
 // 导入你的 BaseResponse, ApiUrl, 拦截器等
@@ -24,6 +25,10 @@ class ApiClient {
     String url, {
     Map<String, dynamic>? queryParameters,
     required T? Function(dynamic json) parseData,
+    // 缓存控制参数
+    Duration? maxAge, // 为此请求指定缓存有效期 (覆盖默认)
+    Duration? maxStale, // 为此请求指定过期缓存可用时间 (覆盖默认)
+    bool forceRefresh = false, // 强制刷新
   }) async {
     try {
       // 使用注入的 dio 实例
@@ -167,6 +172,18 @@ Future<ApiClient> setupApiClient() async {
     // 考虑是否需要抛出异常或提供默认行为
   }
   // --- Cookie 管理配置结束 ---
+
+  // *** 使用 LTS 版本的 DioCacheManager ***
+  dio.interceptors.add(
+    DioCacheManager(
+      CacheConfig(
+        baseUrl: ApiUrl.baseUrl, // 仍然需要 baseUrl
+        defaultMaxAge: Duration(minutes: 10),
+        defaultMaxStale: Duration(days: 7),
+        // ... 其他 CacheConfig 选项 (通常与原版相同) ...
+      ),
+    ).interceptor,
+  );
 
   // 添加其他拦截器
   dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));

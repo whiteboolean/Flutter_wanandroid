@@ -38,7 +38,7 @@ dependencies:
   get: ^4.7.2
   dio: ^5.0.9
   carousel_slider: ^5.0.0
-  json_annotation: ^4.5.0
+#  json_annotation: ^4.5.0
   smooth_page_indicator: ^1.0.0+2 # 最新版的 smooth_page_indicator
   webview_flutter: ^4.7.0
   shared_preferences: ^2.2.3 # Shared Preferences
@@ -48,7 +48,9 @@ dependencies:
 #  shared_preferences_cookie_store: ^2.0.1 # 使用 SP 持久化 Cookie (可选但推荐)
   # json_annotation: ^4.9.0 # 如果使用 json_serializable
   # ... 其他依赖
-
+#  json_serializable: ^4.1.4
+#  dio_http_cache: ^0.3.0
+  dio_http_cache_lts: ^0.4.0
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +63,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   json_model: ^1.0.0
-  json_serializable: ^6.5.4
+  json_serializable: ^6.4.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

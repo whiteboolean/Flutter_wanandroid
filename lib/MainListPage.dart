@@ -23,6 +23,7 @@ class MainListPage extends StatelessWidget {
         if (mainTabController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         }
+
         return RefreshIndicator(
           onRefresh: mainTabController.refreshList,
           child: listView(),

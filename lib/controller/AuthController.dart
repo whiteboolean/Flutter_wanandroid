@@ -1,6 +1,7 @@
 // controllers/auth_controller.dart
 import 'dart:async';
 import 'dart:convert'; // 用于 JSON 编解码
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // 直接导入 SP
@@ -112,20 +113,29 @@ class AuthController extends GetxController {
   // 修改后的 logout 方法，处理 API 失败
 
   // *** 用户主动登出方法 ***
-  Future<void> logout() async {
+  Future<void> logout({Function(bool)? callback}) async {
     print("AuthController: User initiated logout...");
     bool apiLogoutAttempted = false;
     // 尝试调用登出 API
     try {
       if (Get.isRegistered<ApiClient>()) {
         apiClient = Get.find<ApiClient>();
-        await apiClient.get<void>('/user/logout/json', parseData: (_) => null);
+        await apiClient.get<void>(ApiUrl.logout, parseData: (_) => null);
         apiLogoutAttempted = true;
         print("AuthController: Logout API call attempted.");
+        if(callback!=null){
+          callback(true);
+        }
       } else {
+        if(callback!=null){
+          callback(false);
+        }
         print("AuthController: ApiClient not registered during logout attempt.");
       }
     } catch (e) {
+      if(callback!=null){
+        callback(false);
+      }
       print("AuthController: Error calling logout API: $e");
       // 即使 API 调用失败，也继续执行本地清理
     }
