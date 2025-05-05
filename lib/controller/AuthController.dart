@@ -105,8 +105,6 @@ class AuthController extends GetxController {
     await _saveLoginStatus(true);
     await _saveUserData(user);
     print("AuthController: Login success handled. State and user data saved.");
-    // Cookie 已经被 dio_cookie_manager 自动保存
-
     // 登录成功后，通常需要跳转到主界面
     Get.offAllNamed(AppRoutes.root); // 清除登录/注册页并跳转到主页
   }

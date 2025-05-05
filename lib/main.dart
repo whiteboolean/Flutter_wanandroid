@@ -8,8 +8,10 @@ import 'package:untitled6/page1.dart';
 
 import 'package:get/get.dart';
 import 'package:untitled6/ui/LoginAndRegisterPage.dart';
+import 'package:untitled6/ui/PersonalInfoPage.dart';
 import 'package:untitled6/ui/PlaceholderPage.dart';
 import 'package:untitled6/ui/RootPage.dart';
+import 'package:untitled6/ui/SettingsPage.dart';
 import 'package:untitled6/ui/WebViewPage.dart';
 
 import 'binding/InitalBinding.dart';
@@ -19,6 +21,8 @@ class AppRoutes {
   static const String root = '/'; // 可以将 RootPage 设为根路由
   static const String webView = '/webView'; // WebView页面
   static const String loginAndRegister = '/loginAndRegister'; // 登录注册页面
+  static const String settings = '/settings'; // 设置页面
+  static const String personalInfo = '/personalInfo'; // 个人信息
 
   static final List<GetPage> routes = [
     GetPage(name: root, page: () => RootPage(), binding: RootBinding()),
@@ -35,7 +39,8 @@ class AppRoutes {
       page: () => LoginAndRegisterPage(),
       binding: LoginRegisterBinding(),
     ),
-    // ... 其他路由
+    GetPage(name: settings, page: () => SettingsPage()),
+    GetPage(name: personalInfo, page: () => PersonalInfoPage()),
   ];
 }
 

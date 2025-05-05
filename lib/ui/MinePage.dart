@@ -67,7 +67,7 @@ class MinePage extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             // Get.snackbar('提示', '跳转到登录/注册页面！');
-            Get.snackbar('提示', '已登录，点击可进入个人资料页');
+            Get.toNamed(AppRoutes.personalInfo);
           },
           child: Column(
             children: [
@@ -205,11 +205,7 @@ class MinePage extends StatelessWidget {
             break;
           case "系统设置":
             Get.toNamed(
-              AppRoutes.webView, // 你的 WebView 路由名称
-              arguments: {
-                'url': "https://www.baidu.com",
-                'title': title, // 使用 Banner 标题
-              },
+              AppRoutes.settings, // 你的 WebView 路由名称
             );
             break;
         }
