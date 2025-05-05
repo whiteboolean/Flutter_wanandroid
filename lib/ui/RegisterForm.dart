@@ -104,10 +104,10 @@ class RegisterForm extends StatelessWidget {
               ).paddingHorizontal(40),
               const SizedBox(height: 16),
 
-              // Confirm 密码输入框
+              // Confirm 密码输入确认框
               TextFormField(
                 controller: controller.registerConfirmPasswordController,
-                obscureText: controller.registerObscureText.value,
+                obscureText: controller.obscureConfirmText.value,
                 decoration: InputDecoration(
                   labelText: 'recheck password',
                   hintText: 'Please input your password again',

@@ -1,8 +1,13 @@
 import 'package:ducafe_ui_core/ducafe_ui_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:getwidget/colors/gf_color.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:getwidget/size/gf_size.dart';
 
 import '../controller/AuthController.dart';
 import '../main.dart';
@@ -21,7 +26,26 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Color(0xFF5380ed),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Column(
+      body: Obx(() {
+        return getButton(controller);
+      }),
+    );
+  }
+
+  Widget getButton(AuthController controller) {
+    if (!controller.isLoggedIn.value) {
+      return Expanded(
+        child: FButton(
+          style: FButtonStyle.primary,
+          prefix: Icon(FIcons.logIn),
+          onPress: () {
+            Get.toNamed(AppRoutes.loginAndRegister);
+          },
+          child: const Text('请先登录~'),
+        ),
+      ).paddingHorizontal(20).paddingTop(20);
+    } else {
+      return Column(
         children: [
           Row(
             children: [
@@ -48,7 +72,7 @@ class SettingsPage extends StatelessWidget {
             );
           }),
         ],
-      ),
-    );
+      );
+    }
   }
 }

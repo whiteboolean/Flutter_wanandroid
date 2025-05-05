@@ -72,7 +72,7 @@ class UnifiedResponseInterceptor extends dio.Interceptor {
         response.data = unifiedResponse;
       }
       // 如果 errorCode == 0 (业务成功)，则不处理，让原始数据通过
-    } else if (!(responseData is BaseResponse)) {
+    } else if (responseData is! BaseResponse) {
       // 增加判断，防止重复包装
       // 响应格式不符合预期 (不是 Map 也不是已经包装好的 BaseResponse)
       print(

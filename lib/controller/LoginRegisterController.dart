@@ -140,11 +140,13 @@ class LoginRegisterController extends GetxController {
       "verifyCode": "2020",
     };
     // 使用 void 作为 T
-    BaseResponse<dynamic> response = await apiClient.post<dynamic>(
+    BaseResponse<dynamic> response = await apiClient.postForm<dynamic>(
       ApiUrl.register,
-      data: params, // 假设 API 路径
+      formData: params, // 假设 API 路径
       parseData: (_) => null, // 提供一个总是返回 null 的解析函数
     );
+    // 关闭加载指示器
+    if (Get.isDialogOpen ?? false) Get.back();
     if (response.isSuccess) {
       Get.snackbar("注册成功", "请使用您的账号密码登录");
       // 注册成功后可以清空注册表单，并切换回登录页面
@@ -156,6 +158,7 @@ class LoginRegisterController extends GetxController {
     } else {
       Get.snackbar("注册失败", response.errorMsg);
     }
+
     return response;
   }
 
@@ -201,9 +204,6 @@ class LoginRegisterController extends GetxController {
 
       // 调用封装的 requestSignUpApi
       await requestSignUpApi(email, password, confirmPassword);
-
-      // 关闭加载指示器
-      if (Get.isDialogOpen ?? false) Get.back();
     }
   }
 
