@@ -103,7 +103,7 @@ class MinePage extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(55), // 设置圆角半径
                 child: Image.network(
-                  AppImages.profilePicture,
+                  AppImages.profilePicture1,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
