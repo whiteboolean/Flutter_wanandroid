@@ -23,7 +23,7 @@ class MainTabController extends GetxController {
   final scrollController = ScrollController();
 
   // 定义一个最小刷新显示时间（例如 800 毫秒）
-  final Duration _minimumRefreshDuration = Duration(milliseconds: 500);
+  final Duration _minimumRefreshDuration = Duration(milliseconds: 200);
 
   // 使用 .obs 创建响应式变量来存储当前选中的 Tab 索引，默认为 0 (第一个 Tab)
   var currentPageIndex = 0.obs;
@@ -56,6 +56,7 @@ class MainTabController extends GetxController {
     // 1. 创建数据获取的 Future (但不立即 await)
     //    将实际的数据获取和处理逻辑封装到一个单独的 async 函数中
     Future<void> dataFetchFuture = fetchArticleList(false);
+    Future<void> dataFetchBanner = fetchBannerData();
 
     // 2. 创建一个延时 Future
     Future<void> delayFuture = Future.delayed(_minimumRefreshDuration);
@@ -63,7 +64,7 @@ class MainTabController extends GetxController {
     try {
       // 3. 使用 Future.wait 等待数据获取和最小延时都完成
       //    RefreshIndicator 会等待这个 Future.wait 完成后才停止动画
-      await Future.wait([dataFetchFuture, delayFuture]);
+      await Future.wait([dataFetchFuture, delayFuture,dataFetchBanner]);
     } catch (e) {
       // 如果 _fetchAndProcessFirstPage 抛出错误，这里会捕获
       print("Error refreshing data: $e");

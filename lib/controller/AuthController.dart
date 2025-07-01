@@ -1,8 +1,5 @@
-// controllers/auth_controller.dart
 import 'dart:async';
 import 'dart:convert'; // 用于 JSON 编解码
-import 'dart:ffi';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // 直接导入 SP
 import 'package:path_provider/path_provider.dart'; // 用于清除 Cookie 文件
@@ -10,7 +7,6 @@ import 'package:untitled6/dio/ApiUrl.dart';
 import 'package:untitled6/model/LoginResponse.dart';
 import 'dart:io';
 
-import '../base/BaseResponse.dart';
 import '../dio/ApiClient.dart';
 import '../main.dart'; // 用于 File 操作
 

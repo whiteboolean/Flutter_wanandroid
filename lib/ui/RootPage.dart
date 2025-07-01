@@ -6,15 +6,15 @@ import 'package:untitled6/controller/MainTabController.dart';
 
 import 'MinePage.dart';
 import 'PlaceholderPage.dart';
-class RootPage extends StatelessWidget {
+class RootPage extends GetView<MainTabController> {
   RootPage({Key? key}) : super(key: key);
 
   // 找到或注入 MainTabController
-  final MainTabController mainTabController = Get.find<MainTabController>();
+  // final MainTabController mainTabController = Get.find<MainTabController>();
 
   // 定义你的四个 Tab 页面列表
   final List<Widget> tabPages = [
-    MainListPage(title:'MainPage'),
+    const MainListPage(title:'MainPage'),
     const PlaceholderPage(title: 'Answer'),
     const PlaceholderPage(title: 'Framework'),
     const MinePage(title: 'Mine'),
@@ -26,16 +26,16 @@ class RootPage extends StatelessWidget {
       // body 部分使用 Obx 包裹 IndexedStack，根据 currentIndex 显示对应的页面
       // IndexedStack 会保持所有页面的状态
       body: Obx(() => IndexedStack(
-            index: mainTabController.currentPageIndex.value, // 绑定当前索引
+            index: controller.currentPageIndex.value, // 绑定当前索引
             children: tabPages, // 显示的页面列表
           )),
 
       // 底部导航栏
       bottomNavigationBar: Obx(() => BottomNavigationBar(
             // 获取当前的索引
-            currentIndex: mainTabController.currentPageIndex.value,
+            currentIndex: controller.currentPageIndex.value,
             // 点击 Tab 时调用 Controller 的方法来改变索引
-            onTap: mainTabController.changeTabIndex,
+            onTap: controller.changeTabIndex,
             // **重要:** 当 item 数量 >= 4 时，设置 type 为 fixed，否则会有位移效果
             type: BottomNavigationBarType.fixed,
             // 定义 Tab 按钮
