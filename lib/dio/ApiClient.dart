@@ -151,7 +151,7 @@ Future<ApiClient> setupApiClient() async {
     BaseOptions(
       baseUrl: ApiUrl.baseUrl, // 使用你的 ApiUrl 配置
       connectTimeout: const Duration(seconds: 25),
-      sendTimeout: const Duration(seconds: 25),
+      // sendTimeout: const Duration(seconds: 25),
       receiveTimeout: const Duration(seconds: 25),
     ),
   );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ducafe_ui_core/ducafe_ui_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +15,7 @@ import 'package:untitled6/ui/PlaceholderPage.dart';
 import 'package:untitled6/ui/RootPage.dart';
 import 'package:untitled6/ui/SettingsPage.dart';
 import 'package:untitled6/ui/WebViewPage.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'binding/InitalBinding.dart';
 import 'controller/AuthController.dart';
@@ -47,6 +50,22 @@ class AppRoutes {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 仅对桌面平台初始化
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    await windowManager.ensureInitialized();
+
+    WindowOptions windowOptions = const WindowOptions(
+      minimumSize: Size(500, 500), // 设置最小宽高
+      size: Size(600, 800), // 初始大小
+      center: true, // 居中显示
+      title: '玩安卓', // 窗口标题
+    );
+
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
   // *** 核心逻辑：在 runApp 之前确定初始路由 ***
 
   // 1. 手动执行初始化绑定 (确保 ApiClient 和 AuthController 被 put)
@@ -90,7 +109,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           // 应用的标题，会显示在操作系统的任务管理器等地方
-          title: '玩安卓 Flutter',
+          title: '玩安卓',
           // 你可以改成你的应用名称
 
           // 关闭右上角的 DEBUG 标签

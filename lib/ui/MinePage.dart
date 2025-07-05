@@ -8,17 +8,13 @@ import 'package:untitled6/model/MyPair.dart';
 
 import '../controller/AuthController.dart';
 
-class MinePage extends StatelessWidget {
+class MinePage extends GetView<AuthController> {
   final String title;
 
   const MinePage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    // 1. 获取 AuthController 实例
-    //    确保 AuthController 已经被 InitialBinding 注入
-    final AuthController authController = Get.find<AuthController>();
-
     // 创建一个空的 Widget 列表
     List<MyPair<String, IconData>> rows = [
       MyPair("我的积分", Icons.access_alarm_outlined),
@@ -39,7 +35,7 @@ class MinePage extends StatelessWidget {
       body: Obx(() {
         return Column(
           children: [
-            getCurrentWidget(authController),
+            getCurrentWidget(controller),
 
             /// ... (Spread Operator):
             /// 这是 Dart 中的展开运算符。它用于将一个列表中的元素展开，
