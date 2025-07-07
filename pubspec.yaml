@@ -55,6 +55,7 @@ dependencies:
   forui: ^0.12.0
   forui_assets: ^0.12.0
   window_manager: ^0.4.3
+  get_storage: ^2.1.1 # GetStorage
 
 dev_dependencies:
   flutter_test:

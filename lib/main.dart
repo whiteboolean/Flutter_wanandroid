@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ducafe_ui_core/ducafe_ui_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled6/MainListPage.dart';
 import 'package:untitled6/binding/LoginRegisterBinding.dart';
@@ -9,6 +10,7 @@ import 'package:untitled6/binding/RootBinding.dart';
 import 'package:untitled6/page1.dart';
 
 import 'package:get/get.dart';
+import 'package:untitled6/theme/theme_service.dart';
 import 'package:untitled6/ui/LoginAndRegisterPage.dart';
 import 'package:untitled6/ui/PersonalInfoPage.dart';
 import 'package:untitled6/ui/PlaceholderPage.dart';
@@ -19,6 +21,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'binding/InitalBinding.dart';
 import 'controller/AuthController.dart';
+import 'internationalization/app_translations.dart';
 
 class AppRoutes {
   static const String root = '/'; // 可以将 RootPage 设为根路由
@@ -48,9 +51,8 @@ class AppRoutes {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
-  // 仅对桌面平台初始化
+  WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     await windowManager.ensureInitialized();
 
@@ -66,7 +68,10 @@ void main() async {
       await windowManager.focus();
     });
   }
-  // *** 核心逻辑：在 runApp 之前确定初始路由 ***
+
+  await GetStorage.init(); // <--- 初始化 GetStorage
+  // 可以初始化服务，例如主题服务
+  Get.put(ThemeService());
 
   // 1. 手动执行初始化绑定 (确保 ApiClient 和 AuthController 被 put)
   //    注意：这里假设 InitialBinding 的 dependencies 是 async
@@ -100,51 +105,33 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    final themeService = Get.find<ThemeService>();
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (context, child) {
         return GetMaterialApp(
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
           // 应用的标题，会显示在操作系统的任务管理器等地方
           title: '玩安卓',
-          // 你可以改成你的应用名称
-
           // 关闭右上角的 DEBUG 标签
           debugShowCheckedModeBanner: true,
-
-          // 暗黑模式主题设置 (可选)
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.dark, // 设置为暗黑模式
-            // 可以为暗黑模式定义不同的颜色
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.deepPurple, // 可以使用相同的种子色
-              brightness: Brightness.dark, // 确保指定亮度
-            ),
-            // ... 其他暗黑模式的特定主题设置
-          ),
-
-          // 主题模式选择 (例如，跟随系统、总是亮色、总是暗色)
-          themeMode: ThemeMode.system,
-          // 默认跟随系统设置
-
           // 初始路由名称，应用启动时首先加载这个路由对应的页面
           initialRoute: initialRoute,
           // 设置初始路由为我们在 AppRoutes 中定义的根路由 ('/')
-
           // initialBinding: InitialBinding(),
-
           // GetX 的路由配置列表
           getPages: AppRoutes.routes, // 使用从 app_routes.dart 导入的路由列表
           // 默认转场动画 (可选)
           // defaultTransition: Transition.native, // 使用平台默认的转场动画
-
-          // 可以添加其他全局配置，例如默认的 Locale 等
-          // locale: Locale('zh', 'CN'),
-          // fallbackLocale: Locale('en', 'US'),
+          // ---多语言配置---
+          translations: AppTranslations(),
+          locale: Get.deviceLocale,//设置初始语言
+          fallbackLocale: const Locale('en','US'),
+          // ---主题配置---
+          theme: themeService.lightTheme,       // 浅色主题
+          darkTheme: themeService.darkTheme,     // 深色主题
+          themeMode: themeService.themeMode,   // 从 ThemeService 获取当前模式 (注意这里是 .value，但 GetMaterialApp 会正确处理)
         );
       },
     );

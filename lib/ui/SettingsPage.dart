@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:getwidget/colors/gf_color.dart';
-import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:getwidget/size/gf_size.dart';
+import 'package:untitled6/internationalization/translation_keys.dart';
 
 import '../controller/AuthController.dart';
 import '../main.dart';
+import '../theme/theme_service.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -18,16 +16,57 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AuthController>();
+    final ThemeService themeService = Get.find();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("设置").textColor(Colors.white),
+        title: Text(TranslationKeys.settingsPageTitle.tr),
         centerTitle: true,
-        backgroundColor: Color(0xFF5380ed),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Obx(() {
-        return getButton(controller);
+        return Column(
+          children: [
+            getButton(controller),
+            ElevatedButton(
+              onPressed: () {
+                // 切换语言的逻辑
+                var currentLocale = Get.locale;
+                if (currentLocale?.languageCode == 'en') {
+                  Get.updateLocale(const Locale('zh', 'CN'));
+                } else {
+                  Get.updateLocale(const Locale('en', 'US'));
+                }
+              },
+              child: Text(TranslationKeys.changeLanguage.tr),
+            ).width(200).height(50).paddingTop(20),
+
+            Text('theme_mode'.tr),
+            Obx(() => RadioListTile<ThemeMode>(
+              title: Text('light'.tr),
+              value: ThemeMode.light,
+              groupValue: themeService.themeMode,
+              onChanged: (ThemeMode? value) {
+                if (value != null) themeService.switchThemeMode(value);
+              },
+            )),
+            Obx(() => RadioListTile<ThemeMode>(
+              title: Text('dark'.tr),
+              value: ThemeMode.dark,
+              groupValue: themeService.themeMode,
+              onChanged: (ThemeMode? value) {
+                if (value != null) themeService.switchThemeMode(value);
+              },
+            )),
+            Obx(() => RadioListTile<ThemeMode>(
+              title: Text('system'.tr),
+              value: ThemeMode.system,
+              groupValue: themeService.themeMode,
+              onChanged: (ThemeMode? value) {
+                if (value != null) themeService.switchThemeMode(value);
+              },
+            )),
+          ],
+        );
       }),
     );
   }
@@ -41,7 +80,7 @@ class SettingsPage extends StatelessWidget {
           onPress: () {
             Get.toNamed(AppRoutes.loginAndRegister);
           },
-          child: const Text('请先登录~'),
+          child: Text(TranslationKeys.loginFirst.tr),
         ),
       ).paddingHorizontal(20).paddingTop(20);
     } else {

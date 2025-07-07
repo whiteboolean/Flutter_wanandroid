@@ -1,33 +1,33 @@
 import 'package:get/get.dart';
+import 'translation_keys.dart'; // <--- 导入常量文件
 
 class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys =>
       {
         'en_US': {
-          'greeting': 'Hello!',
-          'change_language': 'Change Language',
-          'home_page_title': 'Home Page',
-          'settings_page_title': 'Settings',
-          'theme_mode': 'Theme Mode',
-          'system': 'System',
-          'light': 'Light',
-          'dark': 'Dark',
+          TranslationKeys.greeting: 'Hello!', // <--- 使用常量
+          TranslationKeys.changeLanguage: 'Change Language',
+          TranslationKeys.homePageTitle: 'Home Page',
+          TranslationKeys.settingsPageTitle: 'Settings',
+          TranslationKeys.themeMode: 'Theme Mode',
+          TranslationKeys.system: 'System',
+          TranslationKeys.light: 'Light',
+          TranslationKeys.dark: 'Dark',
+          TranslationKeys.loginButton: 'Login',
+          TranslationKeys.loginFirst :'Please login first'
         },
         'zh_CN': {
-          'greeting': '你好!',
-          'change_language': '切换语言',
-          'home_page_title': '首页',
-          'settings_page_title': '设置',
-          'theme_mode': '主题模式',
-          'system': '跟随系统',
-          'light': '浅色',
-          'dark': '深色',
+          TranslationKeys.greeting: '你好!', // <--- 使用常量
+          TranslationKeys.changeLanguage: '切换语言',
+          TranslationKeys.homePageTitle: '首页',
+          TranslationKeys.settingsPageTitle: '设置',
+          TranslationKeys.themeMode: '主题模式',
+          TranslationKeys.system: '跟随系统',
+          TranslationKeys.light: '浅色',
+          TranslationKeys.dark: '深色',
+          TranslationKeys.loginButton: '登录',
+          TranslationKeys.loginFirst :'请先登录'
         }
-        // 你可以添加更多语言，例如：
-        // 'ja_JP': {
-        //   'greeting': 'こんにちは!',
-        //   'change_language': '言語を変更',
-        // }
       };
 }

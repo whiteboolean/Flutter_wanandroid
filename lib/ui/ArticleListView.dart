@@ -16,7 +16,7 @@ class ArticleListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // 可以使用 InkWell 包裹整个 Container，以便添加点击事件
 
-    var textStyle = const TextStyle(fontSize: 12.0, color: Color(0XFF999999));
+    var textStyle = const TextStyle(fontSize: 11.0);
 
     return InkWell(
       onTap: () {
@@ -65,8 +65,6 @@ class ArticleListItem extends StatelessWidget {
                   size: 16.0,
                   color: isCollect.value ? Colors.red : Colors.grey[600],
                 ),
-                padding: EdgeInsets.zero, // 移除默认 padding
-                constraints: BoxConstraints(), // 移除默认约束
                 onPressed: () {
                   // 处理点赞点击事件
                   print('点击了点赞');
@@ -82,14 +80,11 @@ class ArticleListItem extends StatelessWidget {
                       articleItem.title ?? "",
                       style: const TextStyle(
                         fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
                       ),
                       maxLines: 2, // 限制标题最多显示两行，溢出显示省略号
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 10),
-
                     Row(
                       children: [
                         Padding(
@@ -97,7 +92,7 @@ class ArticleListItem extends StatelessWidget {
                           // 标签和作者之间留点空隙
                           child: Text(
                             "分享人:",
-                          ).fontSize(12.0).textColor(Color(0XFF999999)),
+                          ).fontSize(10.0),
                         ),
 
                         Text(
