@@ -28,7 +28,6 @@ class _WebViewPageState extends State<WebViewPage> {
       _controller = WebViewController()
       // ... (之前的 WebView 配置保持不变) ...
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0x00000000))
         ..setNavigationDelegate(
           NavigationDelegate(
             onProgress: (int progress) {
